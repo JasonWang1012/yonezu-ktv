@@ -1,8 +1,13 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>KTV 歌詞</title>
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="KTV 歌詞">
+<meta name="theme-color" content="#0b0b14"><link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <style>
-:root{--hi:#ff4fa3;--hi2:#39d0ff;--bg:#0b0b14}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#2a1440,#0b0b14 60%);color:#eee;font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Microsoft JhengHei",sans-serif;height:100vh;height:100dvh;display:flex;overflow:hidden}
+:root{--hi:#ff4fa3;--hi2:#39d0ff;--bg:#0b0b14;--vh:100vh}
+html{height:100%;background:#0b0b14}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#2a1440,#0b0b14 60%);color:#eee;font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Microsoft JhengHei",sans-serif;height:100vh;height:100dvh;height:var(--vh);display:flex;overflow:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
 aside{width:300px;background:#0008;border-right:1px solid #fff1;display:flex;flex-direction:column}
 aside h1{font-size:20px;margin:16px;background:linear-gradient(90deg,var(--hi),var(--hi2));-webkit-background-clip:text;color:transparent}
 #arts{display:flex;flex-wrap:wrap;gap:6px;margin:0 16px 8px}#arts button{padding:4px 10px;border-radius:14px;border:1px solid #fff3;background:#111;color:#ccc;cursor:pointer;font-size:13px}#arts button.on{background:var(--hi,#e33);color:#000;border-color:transparent}#q{margin:0 16px 10px;padding:10px;border-radius:8px;border:1px solid #fff3;background:#111;color:#fff;font-size:15px}
@@ -28,9 +33,9 @@ button,label.btn{background:#222;color:#eee;border:1px solid #fff3;border-radius
 #msg{color:#888;text-align:center;margin-top:30px;font-size:20px;position:absolute;top:0;left:0;right:0;padding:0 12px}
 /* fullscreen KTV */
 #ov,#fsx{display:none}
-#pw.fs{position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;max-height:none;aspect-ratio:auto;z-index:1000;background:#000}
+#pw.fs{position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;height:var(--vh);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);max-height:none;aspect-ratio:auto;z-index:1000;background:#000}
 #pw:fullscreen{width:100%;height:100%;max-height:none;aspect-ratio:auto}
-#pw.fs #ov{display:block;position:absolute;left:0;right:0;bottom:0;padding:18px 4vw calc(28px + env(safe-area-inset-bottom));text-align:center;pointer-events:none;background:linear-gradient(transparent,#000b 35%);z-index:2}
+#pw.fs #ov{display:block;position:absolute;left:0;right:0;bottom:0;padding:18px calc(4vw + env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) calc(4vw + env(safe-area-inset-left));text-align:center;pointer-events:none;background:linear-gradient(transparent,#000b 35%);z-index:2}
 #pw.fs #fsx{display:block;position:absolute;top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));z-index:3;font-size:16px;padding:10px 14px;background:#000a;pointer-events:auto}
 #ov .l{margin:.2em 0;text-shadow:0 2px 6px #000,0 0 2px #000}
 #ov .l.cur{font-size:clamp(26px,5vw,64px);text-shadow:none;filter:drop-shadow(0 2px 3px #000) drop-shadow(0 0 2px #000)}#ov .l.cur .c{text-shadow:none}
@@ -55,10 +60,14 @@ button,label.btn{background:#222;color:#eee;border:1px solid #fff3;border-radius
 #rp{display:none;position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%);width:min(94vw,560px);max-height:80vh;background:#151525f8;border:1px solid #fff3;border-radius:12px;padding:12px;color:#ccc;font-size:14px;flex-direction:column;box-shadow:0 8px 40px #000c}#rp.open{display:flex}#rp .hd{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}#rp .hd b{flex:1;color:#fff}#rpL{overflow:auto;flex:1}#rpL .it{border-top:1px solid #fff1;padding:6px 0;display:flex;gap:8px}#rpL .it div{flex:1;min-width:0}#rpL .it i{color:#888;font-style:normal;font-size:12px}#rpL input{width:100%;margin-top:3px;background:#111;color:#eee;border:1px solid #fff2;border-radius:5px;padding:4px}
 #pw.fs #fsRep{display:block;position:absolute;top:calc(10px + env(safe-area-inset-top));right:calc(150px + env(safe-area-inset-right));z-index:3;font-size:16px;padding:10px 14px;background:#000a}#fsRep{display:none}
 #shade{display:none}
+html.fsopen,html.fsopen body{overflow:hidden;overscroll-behavior:none}html.fsopen body{position:fixed;inset:0;width:100%}
+@media (orientation:landscape) and (max-height:500px){#pw.fs #ov{padding-bottom:calc(10px + env(safe-area-inset-bottom))}#pw.fs #ov .l.cur{font-size:clamp(22px,7vh,44px)}#pw.fs #ov .l.nx{font-size:clamp(16px,5vh,30px)}#pw.fs #fsx,#pw.fs #fsRep{padding:6px 10px;font-size:14px}#pw.fs #fsRep{right:calc(130px + env(safe-area-inset-right))}}
+#iosHint{display:none;position:absolute;left:calc(10px + env(safe-area-inset-left));top:calc(62px + env(safe-area-inset-top));z-index:4;background:#1d1d30ee;border:1px solid #fff3;border-radius:8px;padding:6px 8px 6px 12px;color:#eee;font-size:13px;align-items:center;gap:8px;max-width:min(calc(100% - 20px - env(safe-area-inset-left) - env(safe-area-inset-right)),460px);pointer-events:auto}#pw.fs #iosHint.show{display:flex}#iosHint button{padding:2px 8px;font-size:13px}
+@media (display-mode:standalone),(display-mode:fullscreen){#iosHint{display:none!important}}
 </style></head><body>
 <div id="shade"></div>
 <aside id="side"><h1>🎤 KTV 歌詞</h1><div id="arts"></div><input id="q" placeholder="搜尋歌曲…"><div id="list"></div></aside>
-<main><div id="pw"><div id="player"></div><div id="ov"></div><button id="fsx">✕ 離開全螢幕</button><button id="fsRep" class="repBtn">⚑ 回報不準</button></div>
+<main><div id="pw"><div id="player"></div><div id="ov"></div><button id="fsx">✕ 離開全螢幕</button><button id="fsRep" class="repBtn">⚑ 回報不準</button><div id="iosHint"><span>想完全隱藏網址列：分享 → 加入主畫面，之後從桌面圖示開啟</span><button id="iosHintX" title="不再顯示">✕</button></div></div>
 <div id="bar"><span id="now">請選擇歌曲</span>
 <button id="menuBtn">☰ 歌單</button><button id="fsBtn" title="全螢幕 KTV 模式">⛶ 全螢幕</button><button id="setBtn">⚙ 設定</button><button id="repBtn" class="repBtn" title="記錄目前歌詞位置不準">⚑ 回報不準</button><button id="rpBtn">回報清單 (<span id="rpN">0</span>)</button>
 <label class="btn"><input type="checkbox" id="auto" style="margin-right:4px">自動連播循環</label><label class="btn">載入 .lrc<input type="file" id="file" accept=".lrc,.txt" hidden></label></div>
@@ -105,10 +114,17 @@ $('#menuBtn').onclick=()=>drawer(!$('#side').classList.contains('open'));$('#sha
 $('#setBtn').onclick=e=>{e.stopPropagation();const p=$('#set'),o=!p.classList.contains('open');p.classList.toggle('open',o);if(o){const b=$('#setBtn'),m=$('main').getBoundingClientRect(),r=b.getBoundingClientRect();p.style.top=(r.bottom-m.top+6)+'px';p.style.left=Math.max(8,Math.min(r.left-m.left-120,m.width-p.offsetWidth-8))+'px'}};
 $('#set').onclick=e=>e.stopPropagation();document.addEventListener('click',()=>$('#set').classList.remove('open'));
 const pw=$('#pw');const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
-function enterFS(){pw.classList.add('fs');lastIdx=-2;const rq=pw.requestFullscreen||pw.webkitRequestFullscreen;if(rq){try{const r=rq.call(pw);r&&r.catch&&r.catch(()=>{})}catch(e){}}}
-function exitFS(){pw.classList.remove('fs');lastIdx=-2;if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}}
+function setVH(){const v=window.visualViewport;const h=Math.round(v&&v.height?v.height:window.innerHeight);document.documentElement.style.setProperty('--vh',h+'px');lastIdx=-2}
+setVH();['resize','orientationchange'].forEach(ev=>window.addEventListener(ev,()=>{setVH();setTimeout(setVH,300)}));window.visualViewport&&window.visualViewport.addEventListener('resize',setVH);
+const isStandalone=()=>!!(navigator.standalone||(window.matchMedia&&(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches)));
+const isIOSSafari=()=>{const u=navigator.userAgent;const ios=/iP(hone|od|ad)/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);return ios&&/Safari/.test(u)&&!/CriOS|FxiOS|EdgiOS|OPiOS/.test(u)};
+function iosHint(on){const h=$('#iosHint');let seen=false;try{seen=localStorage.ktvIosHint==='1'}catch(e){}h.classList.toggle('show',!!(on&&!seen&&isIOSSafari()&&!isStandalone()))}
+$('#iosHintX').onclick=e=>{e.stopPropagation();try{localStorage.ktvIosHint='1'}catch(x){}iosHint(false)};
+function lockScroll(on){document.documentElement.classList.toggle('fsopen',on);if(on)window.scrollTo(0,0);setVH()}
+function enterFS(){pw.classList.add('fs');lockScroll(true);iosHint(true);lastIdx=-2;const rq=pw.requestFullscreen||pw.webkitRequestFullscreen;if(rq){try{const r=rq.call(pw);r&&r.catch&&r.catch(()=>{})}catch(e){}}}
+function exitFS(){pw.classList.remove('fs');lockScroll(false);iosHint(false);lastIdx=-2;if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}}
 $('#fsBtn').onclick=enterFS;$('#fsx').onclick=exitFS;
-['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(!fsEl()&&pw.classList.contains('fs')&&window._wasFS)pw.classList.remove('fs');window._wasFS=!!fsEl();lastIdx=-2}));
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(!fsEl()&&pw.classList.contains('fs')&&window._wasFS){pw.classList.remove('fs');lockScroll(false);iosHint(false)}window._wasFS=!!fsEl();lastIdx=-2}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(pw.classList.contains('fs'))exitFS();$('#set').classList.remove('open');drawer(false)}});
 window.addEventListener('resize',()=>{lastIdx=-2});
 let errRun=0;
