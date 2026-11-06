@@ -59,9 +59,19 @@ button,label.btn{background:#222;color:#eee;border:1px solid #fff3;border-radius
 #toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2000;background:#1d1d30f5;border:1px solid #fff3;border-radius:10px;padding:8px 12px;color:#eee;font-size:14px;display:none;max-width:94vw;box-shadow:0 6px 24px #000a;align-items:center;gap:8px;flex-wrap:wrap}#toast.show{display:flex}#toast .tx{max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#toast button{padding:4px 9px;font-size:13px}#toast button.on{background:var(--hi);color:#000}
 #rp{display:none;position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%);width:min(94vw,560px);max-height:80vh;background:#151525f8;border:1px solid #fff3;border-radius:12px;padding:12px;color:#ccc;font-size:14px;flex-direction:column;box-shadow:0 8px 40px #000c}#rp.open{display:flex}#rp .hd{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}#rp .hd b{flex:1;color:#fff}#rpL{overflow:auto;flex:1}#rpL .it{border-top:1px solid #fff1;padding:6px 0;display:flex;gap:8px}#rpL .it div{flex:1;min-width:0}#rpL .it i{color:#888;font-style:normal;font-size:12px}#rpL input{width:100%;margin-top:3px;background:#111;color:#eee;border:1px solid #fff2;border-radius:5px;padding:4px}
 #pw.fs #fsRep{display:block;position:absolute;top:calc(10px + env(safe-area-inset-top));right:calc(150px + env(safe-area-inset-right));z-index:3;font-size:16px;padding:10px 14px;background:#000a}#fsRep{display:none}
-#fsNav{display:none}#pw.fs #fsNav{display:flex;gap:8px;position:absolute;top:calc(10px + env(safe-area-inset-top));left:calc(10px + env(safe-area-inset-left));z-index:3}#fsNav button{font-size:16px;padding:8px 14px;min-height:44px;min-width:44px;background:#000a}
 button:disabled{opacity:.35;cursor:default}
-@media(max-width:600px){#fsNav .nt{display:none}#fsNav{gap:6px}#fsNav button{padding:8px 12px}}
+/* in-player prev/next: icons, tap-to-reveal, idle hide (YouTube iframe is cross-origin — center hit only) */
+#ytHit{position:absolute;left:16%;right:16%;top:20%;bottom:30%;z-index:2;background:transparent;cursor:default;pointer-events:auto;-webkit-tap-highlight-color:transparent}
+#ytEdgeL,#ytEdgeR{position:absolute;top:28%;bottom:32%;width:min(72px,14%);z-index:2;pointer-events:auto;background:transparent;-webkit-tap-highlight-color:transparent}
+#ytEdgeL{left:0}#ytEdgeR{right:0}
+#pw.ytShow #ytHit,#pw.ytShow #ytEdgeL,#pw.ytShow #ytEdgeR{pointer-events:none}
+#ytNav{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:0 6px;pointer-events:none;opacity:0;transition:opacity .18s ease;visibility:hidden}
+#pw.ytShow #ytNav{opacity:1;visibility:visible}
+#ytNav .ytNB{pointer-events:none;width:48px;height:48px;min-width:44px;min-height:44px;border-radius:50%;background:#000c;border:1px solid #fff5;color:#fff;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px #000a;padding:0;flex:none}
+#pw.ytShow #ytNav .ytNB{pointer-events:auto}
+#pw.fs #ytNav{padding-left:calc(6px + env(safe-area-inset-left));padding-right:calc(6px + env(safe-area-inset-right))}
+#pw.fs #ytEdgeL{left:env(safe-area-inset-left)}#pw.fs #ytEdgeR{right:env(safe-area-inset-right)}
+@media(max-width:768px){#ytNav .ytNB{width:48px;height:48px}}
 #shade{display:none}
 html.fsopen,html.fsopen body{overflow:hidden;overscroll-behavior:none}html.fsopen body{position:fixed;inset:0;width:100%}
 @media (orientation:landscape) and (max-height:500px){#pw.fs #ov{padding-bottom:calc(10px + env(safe-area-inset-bottom))}#pw.fs #ov .l.cur{font-size:clamp(22px,7vh,44px)}#pw.fs #ov .l.nx{font-size:clamp(16px,5vh,30px)}#pw.fs #fsx,#pw.fs #fsRep{padding:6px 10px;font-size:14px}#pw.fs #fsRep{right:calc(130px + env(safe-area-inset-right))}}
@@ -79,9 +89,8 @@ html.fsopen,html.fsopen body{overflow:hidden;overscroll-behavior:none}html.fsope
 </style></head><body>
 <div id="shade"></div>
 <aside id="side"><div class="sideHd"><h1>🎤 KTV 歌詞</h1><button id="sideX" class="xb">✕ 關閉</button></div><div id="arts"></div><input id="q" placeholder="搜尋歌曲…"><div id="list"></div></aside>
-<main><div id="pw"><div id="player"></div><div id="ov"></div><div id="fsNav"><button id="fsPrev" class="pvB" title="上一首 (Shift+P)" aria-label="上一首">⏮<span class="nt"> 上一首</span></button><button id="fsNext" class="nxB" title="下一首 (Shift+N)" aria-label="下一首"><span class="nt">下一首 </span>⏭</button></div><button id="fsx">✕ 離開全螢幕</button><button id="fsRep" class="repBtn">⚑ 回報不準</button><div id="iosHint"><span>想完全隱藏網址列：分享 → 加入主畫面，之後從桌面圖示開啟</span><button id="iosHintX" title="不再顯示">✕</button></div></div>
+<main><div id="pw"><div id="player"></div><div id="ov"></div><div id="ytHit" aria-hidden="false" title="顯示上一首／下一首"></div><div id="ytEdgeL" class="ytEdge" aria-hidden="true"></div><div id="ytEdgeR" class="ytEdge" aria-hidden="true"></div><div id="ytNav" aria-hidden="true"><button type="button" id="prevBtn" class="pvB ytNB" title="上一首 (Shift+P)" aria-label="上一首">⏮</button><button type="button" id="nextBtn" class="nxB ytNB" title="下一首 (Shift+N)" aria-label="下一首">⏭</button></div><button id="fsx">✕ 離開全螢幕</button><button id="fsRep" class="repBtn">⚑ 回報不準</button><div id="iosHint"><span>想完全隱藏網址列：分享 → 加入主畫面，之後從桌面圖示開啟</span><button id="iosHintX" title="不再顯示">✕</button></div></div>
 <div id="bar"><span id="now">請選擇歌曲</span>
-<button id="prevBtn" class="pvB" title="上一首 (Shift+P)">⏮ 上一首</button><button id="nextBtn" class="nxB" title="下一首 (Shift+N)">下一首 ⏭</button>
 <button id="menuBtn">☰ 歌單</button><button id="fsBtn" title="全螢幕 KTV 模式">⛶ 全螢幕</button><button id="setBtn">⚙ 設定</button><button id="repBtn" class="repBtn" title="記錄目前歌詞位置不準">⚑ 回報不準</button><button id="rpBtn">回報清單 (<span id="rpN">0</span>)</button>
 <label class="btn"><input type="checkbox" id="auto" style="margin-right:4px">自動連播循環</label><label class="btn">載入 .lrc<input type="file" id="file" accept=".lrc,.txt" hidden></label></div>
 <div id="set"><div class="sh"><h3 id="setTitle">設定</h3><button id="setX" class="xb">✕ 關閉</button></div>
@@ -109,7 +118,7 @@ async function getData(s){if(window.LRC)return{lrc:LRC[s.id]||null,timings:(wind
   let lrc=null,timings=null;if(s.lyrics){try{const r=await fetch('lyrics/'+s.id+'.lrc');if(r.ok)lrc=await r.text()}catch(e){}try{const r=await fetch('timings/'+s.id+'.json');if(r.ok)timings=await r.json()}catch(e){}}return{lrc,timings}})();
  cache[s.id]=p;p.catch(()=>{delete cache[s.id]});return p}
 function nextOf(s){const a=s.artist||'米津玄師';const l=songs.filter(x=>(x.artist||'米津玄師')===a);const i=l.findIndex(x=>x.id===s.id);return l[(i+1)%l.length]}
-async function pick(s){cur=s;started=false;lastIdx=-2;renderList();try{navUpd()}catch(e){}scrollListToCur();$('#now').textContent=s.title;$('#setTitle').textContent='設定 — '+s.title;scale=+(localStorage['sc_'+s.id]||1);$('#sc').textContent=(scale*100).toFixed(1)+'%';
+async function pick(s){cur=s;started=false;lastIdx=-2;renderList();try{navUpd();if(window._ytOnPick)window._ytOnPick()}catch(e){}scrollListToCur();$('#now').textContent=s.title;$('#setTitle').textContent='設定 — '+s.title;scale=+(localStorage['sc_'+s.id]||1);$('#sc').textContent=(scale*100).toFixed(1)+'%';
  if(ready)player.loadVideoById(s.videoId);
  const custom=localStorage['lrc_'+s.id];let txt=custom||null,tm=null;
  if(!custom&&s.lyrics){lines=[];$('#inner').innerHTML='';$('#ov').innerHTML='';$('#msg').textContent='歌詞載入中…';
@@ -135,19 +144,38 @@ $('#iosHintX').onclick=e=>{e.stopPropagation();try{localStorage.ktvIosHint='1'}c
 function lockScroll(on){document.documentElement.classList.toggle('fsopen',on);if(on)window.scrollTo(0,0);setVH()}
 function enterFS(){pw.classList.add('fs');lockScroll(true);iosHint(true);lastIdx=-2;const rq=pw.requestFullscreen||pw.webkitRequestFullscreen;if(rq){try{const r=rq.call(pw);r&&r.catch&&r.catch(()=>{})}catch(e){}}}
 function exitFS(){pw.classList.remove('fs');lockScroll(false);iosHint(false);lastIdx=-2;if(fsEl()){(document.exitFullscreen||document.webkitExitFullscreen).call(document)}}
-$('#fsBtn').onclick=enterFS;$('#fsx').onclick=exitFS;
-['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(!fsEl()&&pw.classList.contains('fs')&&window._wasFS){pw.classList.remove('fs');lockScroll(false);iosHint(false)}window._wasFS=!!fsEl();lastIdx=-2}));
+$('#fsBtn').onclick=()=>enterFS();$('#fsx').onclick=()=>exitFS;
+['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(!fsEl()&&pw.classList.contains('fs')&&window._wasFS){pw.classList.remove('fs');lockScroll(false);iosHint(false);if(window._ytOnPick)window._ytOnPick()}window._wasFS=!!fsEl();lastIdx=-2}));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(pw.classList.contains('fs'))exitFS();$('#set').classList.remove('open');drawer(false)}});
 window.addEventListener('resize',()=>{lastIdx=-2});
 let errRun=0;
-// ---- 上一首 / 下一首 (within selected singer tab order) ----
+// ---- 上一首 / 下一首 (in-player icons; singer-tab order; reveal/idle-hide) ----
+// Honest limit: YT iframe is cross-origin — parent never sees pointer events inside the iframe.
+// Reveal via: center #ytHit tap (consumes first tap), side #ytEdge* hover/tap, Shift+N/P, focus on buttons.
+// Top ~20% / bottom ~30% / side margins outside hit stay clear for YT title/ads/native controls.
 function tabList(){return songs.filter(x=>(x.artist||'米津玄師')===art)}
 function navIdx(){const l=tabList();return [l,cur?l.findIndex(x=>x.id===cur.id):-1]}
-function nav(d){const [l,i]=navIdx();if(!l.length)return;let j=i<0?(d>0?0:-1):i+d;if(j<0||j>=l.length)return;$('#q').value='';localStorage.ktvArt=art;pick(l[j])}
+let ytHideT=0,navLock=0,navBusy=0;
+function ytFocused(){const a=document.activeElement;return !!(a&&a.closest&&a.closest('#ytNav'))}
+function ytShow(){pw.classList.add('ytShow');const n=$('#ytNav'),h=$('#ytHit');if(n)n.setAttribute('aria-hidden','false');if(h)h.setAttribute('aria-hidden','true');clearTimeout(ytHideT);ytHideT=setTimeout(()=>{if(ytFocused()){ytShow();return}ytHide()},3000)}
+function ytHide(){if(ytFocused())return;pw.classList.remove('ytShow');const n=$('#ytNav'),h=$('#ytHit');if(n)n.setAttribute('aria-hidden','true');if(h)h.setAttribute('aria-hidden','false');clearTimeout(ytHideT);ytHideT=0}
 function navUpd(){const [l,i]=navIdx();const pv=i<0?true:i<=0,nx=i<0?!l.length:i>=l.length-1;document.querySelectorAll('.pvB').forEach(b=>b.disabled=pv);document.querySelectorAll('.nxB').forEach(b=>b.disabled=nx)}
-document.querySelectorAll('.pvB').forEach(b=>b.onclick=e=>{e.stopPropagation();nav(-1)});document.querySelectorAll('.nxB').forEach(b=>b.onclick=e=>{e.stopPropagation();nav(1)});
-document.addEventListener('keydown',e=>{if(!e.shiftKey||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;if(e.key==='N'||e.key==='n'){e.preventDefault();nav(1)}else if(e.key==='P'||e.key==='p'){e.preventDefault();nav(-1)}});
-setInterval(navUpd,500);
+function nav(d){if(navBusy||Date.now()<navLock)return;const [l,i]=navIdx();if(!l.length)return;let j=i<0?(d>0?0:-1):i+d;if(j<0||j>=l.length)return;navBusy=1;navLock=Date.now()+500;$('#q').value='';localStorage.ktvArt=art;ytShow();Promise.resolve(pick(l[j])).finally(()=>{navBusy=0;navUpd();ytShow()})}
+document.querySelectorAll('.pvB').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();nav(-1)}));
+document.querySelectorAll('.nxB').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();nav(1)}));
+function ytRevealEv(e){if(pw.classList.contains('ytShow'))return;e.preventDefault();e.stopPropagation();ytShow()}
+const ytHit=$('#ytHit');
+if(ytHit){ytHit.addEventListener('pointerup',ytRevealEv,{passive:false});ytHit.addEventListener('pointermove',e=>{if(e.pointerType==='mouse')ytShow()})}
+document.querySelectorAll('.ytEdge').forEach(el=>{el.addEventListener('pointerenter',()=>ytShow());el.addEventListener('pointerup',ytRevealEv,{passive:false})});
+$('#ytNav').addEventListener('pointerdown',e=>e.stopPropagation());
+$('#ytNav').addEventListener('pointermove',()=>{if(pw.classList.contains('ytShow'))ytShow()});
+$('#ytNav').addEventListener('focusin',()=>ytShow());
+$('#ytNav').addEventListener('focusout',()=>setTimeout(()=>{if(!ytFocused()){clearTimeout(ytHideT);ytHideT=setTimeout(ytHide,3000)}},0));
+document.addEventListener('keydown',e=>{if(!e.shiftKey||e.ctrlKey||e.metaKey||e.altKey)return;const t=e.target;if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'))return;if(e.key==='N'||e.key==='n'){e.preventDefault();ytShow();nav(1)}else if(e.key==='P'||e.key==='p'){e.preventDefault();ytShow();nav(-1)}});
+setInterval(navUpd,500);navUpd();
+window._ytOnPick=()=>{clearTimeout(ytHideT);ytHide()};
+(function(){const _e=enterFS,_x=exitFS;enterFS=function(){_e();ytHide();ytShow()};exitFS=function(){_x();ytHide()};$('#fsBtn').onclick=enterFS;$('#fsx').onclick=exitFS})();
+
 function playNext(){if(!cur)return;const a=cur.artist||'米津玄師';const n=nextOf(cur);if(n){if(art!==a){art=a;renderArts()}pick(n)}}
 $('#auto').checked=localStorage.ktvAuto!=='0';$('#auto').onchange=()=>{localStorage.ktvAuto=$('#auto').checked?'1':'0'};
 function isAd(){try{const vd=player.getVideoData&&player.getVideoData();if(vd&&vd.video_id&&cur&&vd.video_id!==cur.videoId)return true;const d=player.getDuration?player.getDuration():0;if(cur&&d>0){const ref=cur.lrcDuration||180;if(d<ref*0.5)return true}}catch(e){}return false}
