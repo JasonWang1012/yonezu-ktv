@@ -86,6 +86,17 @@ html.fsopen,html.fsopen body{overflow:hidden;overscroll-behavior:none}html.fsope
 #rp{max-height:calc(var(--vh) - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;overflow:hidden}
 #rp .hd{position:sticky;top:0;flex:none}#rpL{min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 #rp .hd button{min-height:40px}#toast #tX{background:#333}
+
+/* furigana ruby (lemon pilot) */
+.l ruby.rb{ruby-position:over;-webkit-ruby-position:over;ruby-align:center}
+.l rt{font-size:.42em;font-weight:600;color:#c8c8d8;line-height:1.05;user-select:none;pointer-events:none;text-shadow:none;letter-spacing:0}
+.l.w{line-height:1.7;padding-top:.15em}
+.l.w.cur{line-height:1.75}
+#ov .l{line-height:1.55;padding-top:.2em}
+#ov .l rt{font-size:.38em;color:#ddd;filter:none;text-shadow:0 1px 2px #000a}
+@media(max-width:768px){.l.w{line-height:1.65}.l rt{font-size:.4em}#ov .l rt{font-size:.36em}}
+@media(orientation:landscape) and (max-height:500px){#ov .l{line-height:1.35;padding-top:.1em}#ov .l rt{font-size:.34em}}
+
 </style></head><body>
 <div id="shade"></div>
 <aside id="side"><div class="sideHd"><h1>🎤 KTV 歌詞</h1><button id="sideX" class="xb">✕ 關閉</button></div><div id="arts"></div><input id="q" placeholder="搜尋歌曲…"><div id="list"></div></aside>
@@ -111,19 +122,22 @@ function parseLRC(t){const out=[];for(const raw of t.split(/\r?\n/)){const tags=
 function scrollListToCur(){const L=$('#list'),el=L.querySelector('.on');if(!el)return;L.scrollTop=el.offsetTop-L.clientHeight/2+el.offsetHeight/2}
 let art=localStorage.ktvArt||'米津玄師';function renderArts(){const as=[...new Set(songs.map(s=>s.artist||'米津玄師'))];if(!as.includes(art))art=as[0]||'米津玄師';const b=$('#arts');b.innerHTML='';as.forEach(a=>{const e=document.createElement('button');e.textContent=a;if(a===art)e.className='on';e.onclick=()=>{art=a;localStorage.ktvArt=a;renderArts();renderList();scrollListToCur()};b.appendChild(e)})}function renderList(){const q=$('#q').value.toLowerCase();$('#list').innerHTML='';songs.filter(s=>((s.artist||'米津玄師')===art)&&(s.title+s.ytTitle+(s.artist||'')).toLowerCase().includes(q)).forEach(s=>{const d=document.createElement('div');d.innerHTML=`${s.title}<small>${s.lyrics?'♪ 有歌詞':'無同步歌詞'}</small>`;if(cur&&cur.id==s.id)d.className='on';d.onclick=()=>{pick(s);drawer(false)};$('#list').append(d)})}
 function center(i){const ci=i>=0?i:0,el=$('#L'+ci);if(!el)return;$('#inner').style.transform=`translateY(${-(el.offsetTop-$('#lyr').clientHeight/2+el.offsetHeight/2)}px)`}
-function setLines(l,tm){tmode=!!tm;if(cur)loadOff();if(tm)l=tm.lines.map(x=>({t:x.t,e:x.e,txt:x.chars.map(c=>c.c).join(''),chars:x.chars}));lines=l;lastIdx=-2;const inn=$('#inner');inn.classList.add('nt');inn.innerHTML=l.map((x,i)=>x.chars?`<div class="l w" id="L${i}">${x.chars.map((c,j)=>`<span class="c" id="C${i}_${j}">${esc(c.c)}</span>`).join('')}</div>`:`<div class="l" id="L${i}">${x.txt?esc(x.txt):'♪'}</div>`).join('');$('#msg').textContent=l.length?'':'（此曲無同步歌詞，可按「載入 .lrc」自行加入）';
+function bindRuby(tm,rb){rubyLines=null;if(!rb||!cur||rb.id!==cur.id||!tm||!tm.lines||!rb.lines)return;if(rb.lines.length!==tm.lines.length)return;const bases=tm.lines.map(x=>x.chars.map(c=>c.c).join(''));for(let i=0;i<bases.length;i++){if(rb.lines[i].t!==bases[i])return}rubyLines=rb.lines.map(x=>x.rb||[])}
+function charSpan(c,id){return `<span class="c"${id?` id="${id}"`:''}>${esc(c)}</span>`}
+function charsHTML(chars,li,mode){const rb=(rubyLines&&rubyLines[li])||[];const by={};for(const x of rb)by[x.o]=x;let h='',j=0;while(j<chars.length){const sp=by[j];const idOf=k=>mode==='main'?`C${li}_${k}`:mode==='ovids'?`O_${k}`:'';if(sp){let inner='';for(let k=0;k<sp.l;k++)inner+=charSpan(chars[j+k].c,idOf(j+k));h+=`<ruby class="rb">${inner}<rt>${esc(sp.r)}</rt></ruby>`;j+=sp.l}else{h+=charSpan(chars[j].c,idOf(j));j++}}return h}
+function setLines(l,tm,rb){tmode=!!tm;if(cur)loadOff();bindRuby(tm,rb);if(tm)l=tm.lines.map(x=>({t:x.t,e:x.e,txt:x.chars.map(c=>c.c).join(''),chars:x.chars}));lines=l;lastIdx=-2;const inn=$('#inner');inn.classList.add('nt');inn.innerHTML=l.map((x,i)=>x.chars?`<div class="l w" id="L${i}">${charsHTML(x.chars,i,'main')}</div>`:`<div class="l" id="L${i}">${x.txt?esc(x.txt):'♪'}</div>`).join('');$('#msg').textContent=l.length?'':'（此曲無同步歌詞，可按「載入 .lrc」自行加入）';
  show(-1);lastIdx=-1;void inn.offsetHeight;requestAnimationFrame(()=>requestAnimationFrame(()=>inn.classList.remove('nt')))}
-async function getData(s){if(window.LRC)return{lrc:LRC[s.id]||null,timings:(window.TIMINGS&&TIMINGS[s.id])||null};if(cache[s.id])return cache[s.id];
+async function getData(s){if(window.LRC)return{lrc:LRC[s.id]||null,timings:(window.TIMINGS&&TIMINGS[s.id])||null,ruby:(window.RUBY&&RUBY[s.id])||null};if(cache[s.id])return cache[s.id];
  const p=(async()=>{if(window.DATA_BASE!=null){const r=await fetch(DATA_BASE+s.id+'.json');if(!r.ok)throw new Error(r.status);return await r.json()}
-  let lrc=null,timings=null;if(s.lyrics){try{const r=await fetch('lyrics/'+s.id+'.lrc');if(r.ok)lrc=await r.text()}catch(e){}try{const r=await fetch('timings/'+s.id+'.json');if(r.ok)timings=await r.json()}catch(e){}}return{lrc,timings}})();
+  let lrc=null,timings=null,ruby=null;if(s.lyrics){try{const r=await fetch('lyrics/'+s.id+'.lrc');if(r.ok)lrc=await r.text()}catch(e){}try{const r=await fetch('timings/'+s.id+'.json');if(r.ok)timings=await r.json()}catch(e){}try{const r=await fetch('readings/'+s.id+'.json');if(r.ok)ruby=await r.json()}catch(e){}}return{lrc,timings,ruby}})();
  cache[s.id]=p;p.catch(()=>{delete cache[s.id]});return p}
 function nextOf(s){const a=s.artist||'米津玄師';const l=songs.filter(x=>(x.artist||'米津玄師')===a);const i=l.findIndex(x=>x.id===s.id);return l[(i+1)%l.length]}
 async function pick(s){cur=s;started=false;lastIdx=-2;renderList();try{navUpd();if(window._ytOnPick)window._ytOnPick()}catch(e){}scrollListToCur();$('#now').textContent=s.title;$('#setTitle').textContent='設定 — '+s.title;scale=+(localStorage['sc_'+s.id]||1);$('#sc').textContent=(scale*100).toFixed(1)+'%';
  if(ready)player.loadVideoById(s.videoId);
- const custom=localStorage['lrc_'+s.id];let txt=custom||null,tm=null;
+ const custom=localStorage['lrc_'+s.id];let txt=custom||null,tm=null,rb=null;
  if(!custom&&s.lyrics){lines=[];$('#inner').innerHTML='';$('#ov').innerHTML='';$('#msg').textContent='歌詞載入中…';
-  try{const d=await getData(s);txt=d.lrc;tm=d.timings}catch(e){if(cur!==s)return;$('#msg').textContent='歌詞載入失敗，請重新選擇歌曲';return}}
- if(cur!==s)return;setLines(txt?parseLRC(txt):[],tm);
+  try{const d=await getData(s);txt=d.lrc;tm=d.timings;rb=d.ruby||null}catch(e){if(cur!==s)return;$('#msg').textContent='歌詞載入失敗，請重新選擇歌曲';return}}
+ if(cur!==s)return;setLines(txt?parseLRC(txt):[],tm,rb);
  const n=nextOf(s);if(n&&n.lyrics&&n!==s)setTimeout(()=>getData(n).catch(()=>{}),1500)}
 document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{if(!cur)return;const d=+b.dataset.d;offset=d?Math.round((offset+d)*10)/10:0;localStorage[offKey()]=offset;$('#off').textContent=offset.toFixed(1)});
 $('#file').onchange=async e=>{const f=e.target.files[0];if(!f||!cur)return;const t=await f.text();localStorage['lrc_'+cur.id]=t;setLines(parseLRC(t),null);e.target.value=''};
@@ -183,7 +197,7 @@ function playNext(){if(!cur)return;const a=cur.artist||'米津玄師';const n=ne
 $('#auto').checked=localStorage.ktvAuto!=='0';$('#auto').onchange=()=>{localStorage.ktvAuto=$('#auto').checked?'1':'0'};
 function isAd(){try{const vd=player.getVideoData&&player.getVideoData();if(vd&&vd.video_id&&cur&&vd.video_id!==cur.videoId)return true;const d=player.getDuration?player.getDuration():0;if(cur&&d>0){const ref=cur.lrcDuration||180;if(d<ref*0.5)return true}}catch(e){}return false}
 function adBox(){let b=$('#adm');if(!b){b=document.createElement('div');b.id='adm';b.style.cssText='display:none;position:absolute;width:0;height:0';$('#lyr').append(b)}return b}
-function ovLine(x,i,cls,ids){if(!x)return'';if(x.chars)return`<div class="l w ${cls}"${ids?' id="OL"':''}>${x.chars.map((c,j)=>`<span class="c"${ids?` id="O_${j}"`:''}>${esc(c.c)}</span>`).join('')}</div>`;return`<div class="l ${cls}"${ids?' id="OL"':''}>${x.txt?esc(x.txt):'♪'}</div>`}
+function ovLine(x,i,cls,ids){if(!x)return'';if(x.chars)return`<div class="l w ${cls}"${ids?' id="OL"':''}>${charsHTML(x.chars,i,ids?'ovids':'ov')}</div>`;return`<div class="l ${cls}"${ids?' id="OL"':''}>${x.txt?esc(x.txt):'♪'}</div>`}
 function show(i){document.querySelectorAll('#inner .l.cur,#inner .l.near').forEach(e=>e.classList.remove('cur','near'));adBox().style.display=i===-3?'block':'none';if(!lines.length){$('#ov').innerHTML='';return}
  const ci=i>=0?i:0,el=$('#L'+ci);if(i>=0)el.classList.add('cur');else $('#L0').classList.add('near');[ci-1,ci+1].forEach(j=>{if(i<0&&j<1)return;const n=$('#L'+j);n&&n.classList.add('near')});center(i);
  if(pw.classList.contains('fs'))$('#ov').innerHTML=i>=0?ovLine(lines[i],i,'cur',1)+ovLine(lines[i+1],i+1,'nx',0):ovLine(lines[0],0,'nx',0)+ovLine(lines[1],1,'nx',0);else $('#ov').innerHTML=''}
