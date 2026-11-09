@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>KTV 歌詞</title>
+<title>JPOP KTV</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="KTV 歌詞">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="JPOP KTV">
 <meta name="theme-color" content="#0b0b14"><link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <style>
@@ -36,7 +36,7 @@ button,label.btn{background:#222;color:#eee;border:1px solid #fff3;border-radius
 #pw.fs{position:fixed;top:0;left:0;width:100vw;height:100vh;height:100dvh;height:var(--vh);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);max-height:none;aspect-ratio:auto;z-index:1000;background:#000}
 #pw:fullscreen{width:100%;height:100%;max-height:none;aspect-ratio:auto}
 #pw.fs #ov{display:block;position:absolute;left:0;right:0;bottom:0;padding:18px calc(4vw + env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) calc(4vw + env(safe-area-inset-left));text-align:center;pointer-events:none;background:linear-gradient(transparent,#000b 35%);z-index:2}
-#pw.fs #fsx{display:block;position:absolute;top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));z-index:3;font-size:16px;padding:10px 14px;background:#000a;pointer-events:auto}
+#pw.fs #fsx{display:block;position:absolute;top:calc(10px + env(safe-area-inset-top));right:calc(10px + env(safe-area-inset-right));z-index:5;font-size:16px;padding:10px 14px;background:#000a;pointer-events:auto}
 #ov .l{margin:.2em 0;text-shadow:0 2px 6px #000,0 0 2px #000}
 #ov .l.cur{font-size:clamp(26px,5vw,64px);text-shadow:none;filter:drop-shadow(0 2px 3px #000) drop-shadow(0 0 2px #000)}#ov .l.cur .c{text-shadow:none}
 #ov .l.nx{font-size:clamp(18px,3.2vw,40px);color:#fffc}
@@ -58,14 +58,14 @@ button,label.btn{background:#222;color:#eee;border:1px solid #fff3;border-radius
 }
 #toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:2000;background:#1d1d30f5;border:1px solid #fff3;border-radius:10px;padding:8px 12px;color:#eee;font-size:14px;display:none;max-width:94vw;box-shadow:0 6px 24px #000a;align-items:center;gap:8px;flex-wrap:wrap}#toast.show{display:flex}#toast .tx{max-width:60vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#toast button{padding:4px 9px;font-size:13px}#toast button.on{background:var(--hi);color:#000}
 #rp{display:none;position:fixed;z-index:1500;left:50%;top:50%;transform:translate(-50%,-50%);width:min(94vw,560px);max-height:80vh;background:#151525f8;border:1px solid #fff3;border-radius:12px;padding:12px;color:#ccc;font-size:14px;flex-direction:column;box-shadow:0 8px 40px #000c}#rp.open{display:flex}#rp .hd{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:8px}#rp .hd b{flex:1;color:#fff}#rpL{overflow:auto;flex:1}#rpL .it{border-top:1px solid #fff1;padding:6px 0;display:flex;gap:8px}#rpL .it div{flex:1;min-width:0}#rpL .it i{color:#888;font-style:normal;font-size:12px}#rpL input{width:100%;margin-top:3px;background:#111;color:#eee;border:1px solid #fff2;border-radius:5px;padding:4px}
-#pw.fs #fsRep{display:block;position:absolute;top:calc(10px + env(safe-area-inset-top));right:calc(150px + env(safe-area-inset-right));z-index:3;font-size:16px;padding:10px 14px;background:#000a}#fsRep{display:none}
+#pw.fs #fsRep{display:block;position:absolute;top:calc(10px + env(safe-area-inset-top));right:calc(150px + env(safe-area-inset-right));z-index:5;font-size:16px;padding:10px 14px;background:#000a}#fsRep{display:none}
 button:disabled{opacity:.35;cursor:default}
 /* in-player prev/next: icons, tap-to-reveal, idle hide (YouTube iframe is cross-origin — center hit only) */
 #ytHit{position:absolute;left:16%;right:16%;top:20%;bottom:30%;z-index:2;background:transparent;cursor:default;pointer-events:auto;-webkit-tap-highlight-color:transparent}
 #ytEdgeL,#ytEdgeR{position:absolute;top:28%;bottom:32%;width:min(72px,14%);z-index:2;pointer-events:auto;background:transparent;-webkit-tap-highlight-color:transparent}
 #ytEdgeL{left:0}#ytEdgeR{right:0}
 #pw.ytShow #ytHit,#pw.ytShow #ytEdgeL,#pw.ytShow #ytEdgeR{pointer-events:none}
-#ytNav{position:absolute;inset:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:0 6px;pointer-events:none;opacity:0;transition:opacity .18s ease;visibility:hidden}
+#ytNav{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:0 6px;pointer-events:none;opacity:0;transition:opacity .18s ease;visibility:hidden}
 #pw.ytShow #ytNav{opacity:1;visibility:visible}
 #ytNav .ytNB{pointer-events:none;width:48px;height:48px;min-width:44px;min-height:44px;border-radius:50%;background:#000c;border:1px solid #fff5;color:#fff;font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px #000a;padding:0;flex:none}#ytNav .ytNB svg{display:block;flex:none;pointer-events:none}
 #pw.ytShow #ytNav .ytNB{pointer-events:auto}
@@ -101,9 +101,39 @@ html.fsopen,html.fsopen body{overflow:hidden;overscroll-behavior:none}html.fsope
 @media(max-width:768px){.l.w{line-height:1.65}.l rt{font-size:.4em}#ov .l rt{font-size:.36em}}
 @media(orientation:landscape) and (max-height:500px){#ov .l{line-height:1.35;padding-top:.1em}#ov .l rt{font-size:.34em}}
 
+
+/* lyric click-to-seek */
+#inner .l{cursor:pointer;-webkit-tap-highlight-color:transparent}
+#inner .l:hover{color:#fffc}
+/* FS lyric overlay above #ytHit so taps seek instead of nav-reveal; children none = solid hit box */
+#pw.fs #ov{pointer-events:none;z-index:4}
+#pw.fs #ov .l{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+#pw.fs #ov .l *{pointer-events:none}
+
+/* JPOP home */
+#home{display:none;position:fixed;inset:0;z-index:60;background:radial-gradient(circle at 30% 0,#2a1440,#0b0b14 55%);overflow:auto;padding:calc(24px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));}
+#home.show{display:block}
+#home .wrap{max-width:960px;margin:0 auto}
+#home h1{font-size:clamp(32px,8vw,56px);margin:8px 0 6px;background:linear-gradient(90deg,var(--hi),var(--hi2));-webkit-background-clip:text;color:transparent;text-align:center;font-weight:800;letter-spacing:.04em}
+#home .sub{text-align:center;color:#aaa;margin:0 0 28px;font-size:15px}
+#homeCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(min-width:720px){#homeCards{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}}
+.acard{position:relative;border:1px solid #fff2;border-radius:16px;overflow:hidden;cursor:pointer;background:#111a;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;box-shadow:0 8px 28px #0006;transition:transform .15s,border-color .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent}
+.acard:hover,.acard:focus-visible{transform:translateY(-2px);border-color:var(--ac,#ff4fa3);box-shadow:0 12px 32px #000a;outline:none}
+.acard .thumb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.35;filter:saturate(1.1)}
+.acard .shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,#000d 85%)}
+.acard .meta{position:relative;z-index:1}
+.acard .an{font-size:clamp(18px,3.5vw,22px);font-weight:800;color:#fff}
+.acard .ac{font-size:13px;color:#ccc;margin-top:4px}
+.acard .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ac);margin-right:6px;vertical-align:middle;box-shadow:0 0 8px var(--ac)}
+aside h1{cursor:pointer}aside h1:hover{filter:brightness(1.15)}
+#homeBtn{display:none;margin:0 16px 8px;padding:8px 12px;border-radius:8px;border:1px solid #fff3;background:#111;color:#ddd;cursor:pointer;font-size:13px;text-align:left}
+@media(max-width:768px){#homeBtn{display:block;min-height:44px}}
+
 </style></head><body>
+<div id="home" aria-label="JPOP 首頁"><div class="wrap"><h1>JPOP</h1><p class="sub">選一位歌手開始 · KTV 歌詞</p><div id="homeCards"></div></div></div>
 <div id="shade"></div>
-<aside id="side"><div class="sideHd"><h1>🎤 KTV 歌詞</h1><button id="sideX" class="xb">✕ 關閉</button></div><div id="arts"></div><input id="q" placeholder="搜尋歌曲…"><div id="list"></div></aside>
+<aside id="side"><div class="sideHd"><h1 id="brandHome" title="回 JPOP 首頁">🎤 JPOP</h1><button id="sideX" class="xb">✕ 關閉</button></div><button type="button" id="homeBtn" title="回首頁">⌂ JPOP 首頁</button><div id="arts"></div><input id="q" placeholder="搜尋歌曲…"><div id="list"></div></aside>
 <main><div id="pw"><div id="player"></div><div id="ov"></div><div id="ytHit" aria-hidden="false" title="顯示上一首／下一首"></div><div id="ytEdgeL" class="ytEdge" aria-hidden="true"></div><div id="ytEdgeR" class="ytEdge" aria-hidden="true"></div><div id="ytNav" aria-hidden="true"><button type="button" id="prevBtn" class="pvB ytNB" title="上一首 (Shift+P)" aria-label="上一首"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><button type="button" id="nextBtn" class="nxB ytNB" title="下一首 (Shift+N)" aria-label="下一首"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button></div><button id="fsx">✕ 離開全螢幕</button><button id="fsRep" class="repBtn">⚑ 回報不準</button><div id="iosHint"><span>想完全隱藏網址列：分享 → 加入主畫面，之後從桌面圖示開啟</span><button id="iosHintX" title="不再顯示">✕</button></div></div>
 <div id="bar"><span id="now">請選擇歌曲</span>
 <button id="menuBtn">☰ 歌單</button><button id="fsBtn" title="全螢幕 KTV 模式">⛶ 全螢幕</button><button id="setBtn">⚙ 設定</button><button id="repBtn" class="repBtn" title="記錄目前歌詞位置不準">⚑ 回報不準</button><button id="rpBtn">回報清單 (<span id="rpN">0</span>)</button>
@@ -124,13 +154,22 @@ const esc=x=>x.replace(/&/g,'&amp;').replace(/</g,'&lt;');
 const $=s=>document.querySelector(s);
 function parseLRC(t){const out=[];for(const raw of t.split(/\r?\n/)){const tags=[...raw.matchAll(/\[(\d+):(\d+(?:\.\d+)?)\]/g)];if(!tags.length)continue;const txt=raw.replace(/\[[^\]]*\]/g,'').trim();for(const m of tags)out.push({t:+m[1]*60+ +m[2],txt})}return out.sort((a,b)=>a.t-b.t)}
 function scrollListToCur(){const L=$('#list'),el=L.querySelector('.on');if(!el)return;L.scrollTop=el.offsetTop-L.clientHeight/2+el.offsetHeight/2}
-let art=localStorage.ktvArt||'米津玄師';function renderArts(){const as=[...new Set(songs.map(s=>s.artist||'米津玄師'))];if(!as.includes(art))art=as[0]||'米津玄師';const b=$('#arts');b.innerHTML='';as.forEach(a=>{const e=document.createElement('button');e.textContent=a;if(a===art)e.className='on';e.onclick=()=>{art=a;localStorage.ktvArt=a;renderArts();renderList();scrollListToCur()};b.appendChild(e)})}function renderList(){const q=$('#q').value.toLowerCase();$('#list').innerHTML='';songs.filter(s=>((s.artist||'米津玄師')===art)&&(s.title+s.ytTitle+(s.artist||'')).toLowerCase().includes(q)).forEach(s=>{const d=document.createElement('div');d.innerHTML=`${s.title}<small>${s.lyrics?'♪ 有歌詞':'無同步歌詞'}</small>`;if(cur&&cur.id==s.id)d.className='on';d.onclick=()=>{pick(s);drawer(false)};$('#list').append(d)})}
+let art=localStorage.ktvArt||'米津玄師';function renderArts(){const as=[...new Set(songs.map(s=>s.artist||'米津玄師'))];if(!as.includes(art))art=as[0]||'米津玄師';const b=$('#arts');b.innerHTML='';as.forEach(a=>{const e=document.createElement('button');e.textContent=a;if(a===art)e.className='on';e.onclick=()=>{goArtist(a)};b.appendChild(e)})}function renderList(){const q=$('#q').value.toLowerCase();$('#list').innerHTML='';songs.filter(s=>((s.artist||'米津玄師')===art)&&(s.title+s.ytTitle+(s.artist||'')).toLowerCase().includes(q)).forEach(s=>{const d=document.createElement('div');d.innerHTML=`${s.title}<small>${s.lyrics?'♪ 有歌詞':'無同步歌詞'}</small>`;if(cur&&cur.id==s.id)d.className='on';d.onclick=()=>{pick(s);drawer(false)};$('#list').append(d)})}
 function center(i){const ci=i>=0?i:0,el=$('#L'+ci);if(!el)return;$('#inner').style.transform=`translateY(${-(el.offsetTop-$('#lyr').clientHeight/2+el.offsetHeight/2)}px)`}
 let rubyRtFill=false;function bindRuby(tm,rb){rubyLines=null;rubyRtFill=false;if(!rb||!cur||rb.id!==cur.id||!tm||!tm.lines||!rb.lines)return;if(['米津玄師','YOASOBI','優里','嵐'].indexOf(cur.artist||'米津玄師')<0)return;if(rb.lines.length!==tm.lines.length)return;const bases=tm.lines.map(x=>x.chars.map(c=>c.c).join(''));for(let i=0;i<bases.length;i++){if(rb.lines[i].t!==bases[i])return}rubyLines=rb.lines.map(x=>x.rb||[]);rubyRtFill=['米津玄師','YOASOBI','優里','嵐'].indexOf(cur.artist||'米津玄師')>=0}
 function charSpan(c,id){return `<span class="c"${id?` id="${id}"`:''}>${esc(c)}</span>`}
 function charsHTML(chars,li,mode){const rb=(rubyLines&&rubyLines[li])||[];const by={};for(const x of rb)by[x.o]=x;const rtf=rubyRtFill;let h='',j=0;while(j<chars.length){const sp=by[j];const idOf=k=>mode==='main'?`C${li}_${k}`:mode==='ovids'?`O_${k}`:'';if(sp){let inner='';for(let k=0;k<sp.l;k++)inner+=charSpan(chars[j+k].c,idOf(j+k));const rtId=rtf?(mode==='main'?`R${li}_${j}`:mode==='ovids'?`OR_${j}`:''):'';h+=`<ruby class="rb${rtf?' rtf':''}">${inner}<rt${rtId?` id="${rtId}"`:''}>${esc(sp.r)}</rt></ruby>`;j+=sp.l}else{h+=charSpan(chars[j].c,idOf(j));j++}}return h}
-function setLines(l,tm,rb){tmode=!!tm;if(cur)loadOff();bindRuby(tm,rb);if(tm)l=tm.lines.map(x=>({t:x.t,e:x.e,txt:x.chars.map(c=>c.c).join(''),chars:x.chars}));lines=l;lastIdx=-2;const inn=$('#inner');inn.classList.add('nt');inn.innerHTML=l.map((x,i)=>x.chars?`<div class="l w" id="L${i}">${charsHTML(x.chars,i,'main')}</div>`:`<div class="l" id="L${i}">${x.txt?esc(x.txt):'♪'}</div>`).join('');$('#msg').textContent=l.length?'':'（此曲無同步歌詞，可按「載入 .lrc」自行加入）';
+function setLines(l,tm,rb){tmode=!!tm;if(cur)loadOff();bindRuby(tm,rb);if(tm)l=tm.lines.map(x=>({t:x.t,e:x.e,txt:x.chars.map(c=>c.c).join(''),chars:x.chars}));lines=l;lastIdx=-2;const inn=$('#inner');inn.classList.add('nt');inn.innerHTML=l.map((x,i)=>x.chars?`<div class="l w" id="L${i}" data-i="${i}">${charsHTML(x.chars,i,'main')}</div>`:`<div class="l" id="L${i}" data-i="${i}">${x.txt?esc(x.txt):'♪'}</div>`).join('');$('#msg').textContent=l.length?'':'（此曲無同步歌詞，可按「載入 .lrc」自行加入）';
  show(-1);lastIdx=-1;void inn.offsetHeight;requestAnimationFrame(()=>requestAnimationFrame(()=>inn.classList.remove('nt')))}
+
+function resetLyricFill(){lines.forEach((L,li)=>{if(L.chars)L.chars.forEach((c,j)=>{c._p=void 0;const el=document.getElementById('C'+li+'_'+j);el&&el.style.setProperty('--p','0%')});if(rubyLines&&rubyLines[li])rubyLines[li].forEach(sp=>{sp._rp=void 0;const el=document.getElementById('R'+li+'_'+sp.o);el&&el.style.setProperty('--rp','0%')})});document.querySelectorAll('#ov [id^="O_"],#ov [id^="OR_"]').forEach(el=>el.style.setProperty(el.id.startsWith('OR')?'--rp':'--p','0%'));lastIdx=-2}
+function seekToLine(i){if(i<0||!lines[i]||!ready||!player||!player.seekTo)return;const lyricT=Math.max(0,(+lines[i].t||0)-0.3);const pt=Math.max(0,(lyricT-offset)/(scale||1));resetLyricFill();try{player.seekTo(pt,true);player.playVideo&&player.playVideo()}catch(e){}started=true;lastIdx=-2}
+(function(){let down=null;const MOVE=10;function lineFrom(el){const n=el&&el.closest&&el.closest('.l');if(!n)return null;if(n.dataset&&n.dataset.i!=null&&n.dataset.i!==''){const v=+n.dataset.i;return Number.isFinite(v)?v:null}if(n.id){const m=n.id.match(/^L(\d+)$/);if(m)return +m[1];if(n.id==='OL'&&lastIdx>=0)return lastIdx}return null}
+function onDown(e){if(e.button!=null&&e.button!==0)return;const i=lineFrom(e.target);if(i==null||i<0)return;down={x:e.clientX,y:e.clientY,i,ptr:e.pointerId,t:Date.now()};try{e.stopPropagation()}catch(x){}}
+function onUp(e){if(!down||(e.pointerId!=null&&e.pointerId!==down.ptr))return;const dx=e.clientX-down.x,dy=e.clientY-down.y,i=down.i;down=null;if(Math.hypot(dx,dy)>MOVE)return;try{const s=window.getSelection();if(s&&!s.isCollapsed&&String(s).length>0)return}catch(x){}e.preventDefault();try{e.stopPropagation()}catch(x){}seekToLine(i)}
+function onCancel(){down=null}
+['#inner','#ov'].forEach(sel=>{const el=$(sel);if(!el)return;el.addEventListener('pointerdown',onDown,{passive:true});el.addEventListener('pointerup',onUp,{passive:false});el.addEventListener('pointercancel',onCancel,{passive:true})})})();
+
 async function getData(s){if(window.LRC)return{lrc:LRC[s.id]||null,timings:(window.TIMINGS&&TIMINGS[s.id])||null,ruby:(window.RUBY&&RUBY[s.id])||null};if(cache[s.id])return cache[s.id];
  const p=(async()=>{if(window.DATA_BASE!=null){const r=await fetch(DATA_BASE+s.id+'.json');if(!r.ok)throw new Error(r.status);return await r.json()}
   let lrc=null,timings=null,ruby=null;if(s.lyrics){try{const r=await fetch('lyrics/'+s.id+'.lrc');if(r.ok)lrc=await r.text()}catch(e){}try{const r=await fetch('timings/'+s.id+'.json');if(r.ok)timings=await r.json()}catch(e){}try{const r=await fetch('readings/'+s.id+'.json');if(r.ok)ruby=await r.json()}catch(e){}}return{lrc,timings,ruby}})();
@@ -201,7 +240,7 @@ function playNext(){if(!cur)return;const a=cur.artist||'米津玄師';const n=ne
 $('#auto').checked=localStorage.ktvAuto!=='0';$('#auto').onchange=()=>{localStorage.ktvAuto=$('#auto').checked?'1':'0'};
 function isAd(){try{const vd=player.getVideoData&&player.getVideoData();if(vd&&vd.video_id&&cur&&vd.video_id!==cur.videoId)return true;const d=player.getDuration?player.getDuration():0;if(cur&&d>0){const ref=cur.lrcDuration||180;if(d<ref*0.5)return true}}catch(e){}return false}
 function adBox(){let b=$('#adm');if(!b){b=document.createElement('div');b.id='adm';b.style.cssText='display:none;position:absolute;width:0;height:0';$('#lyr').append(b)}return b}
-function ovLine(x,i,cls,ids){if(!x)return'';if(x.chars)return`<div class="l w ${cls}"${ids?' id="OL"':''}>${charsHTML(x.chars,i,ids?'ovids':'ov')}</div>`;return`<div class="l ${cls}"${ids?' id="OL"':''}>${x.txt?esc(x.txt):'♪'}</div>`}
+function ovLine(x,i,cls,ids){if(!x)return'';const di=` data-i="${i}"`;if(x.chars)return`<div class="l w ${cls}"${ids?' id="OL"':''}${di}>${charsHTML(x.chars,i,ids?'ovids':'ov')}</div>`;return`<div class="l ${cls}"${ids?' id="OL"':''}${di}>${x.txt?esc(x.txt):'♪'}</div>`}
 function show(i){document.querySelectorAll('#inner .l.cur,#inner .l.near').forEach(e=>e.classList.remove('cur','near'));adBox().style.display=i===-3?'block':'none';if(!lines.length){$('#ov').innerHTML='';return}
  const ci=i>=0?i:0,el=$('#L'+ci);if(i>=0)el.classList.add('cur');else $('#L0').classList.add('near');[ci-1,ci+1].forEach(j=>{if(i<0&&j<1)return;const n=$('#L'+j);n&&n.classList.add('near')});center(i);
  if(pw.classList.contains('fs'))$('#ov').innerHTML=i>=0?ovLine(lines[i],i,'cur',1)+ovLine(lines[i+1],i+1,'nx',0):ovLine(lines[0],0,'nx',0)+ovLine(lines[1],1,'nx',0);else $('#ov').innerHTML=''}
@@ -253,6 +292,28 @@ $('#rpCopy').onclick=async()=>{const ok=await copyText(repText());const b=$('#rp
 $('#rpClr').onclick=()=>{const n=getReps().length;if(!n)return;if(confirm(`確定清空全部 ${n} 筆回報？此動作無法復原。`)){saveReps([]);lastRep=null;renderReps()}};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){rpOpen(false);clearTimeout(toastT);$('#toast').classList.remove('show')}});
 updN();
-(async()=>{if(!songs.length)songs=await (await fetch('songs.json')).json();renderList();renderArts();renderList();requestAnimationFrame(tick)})();
+
+// ---- JPOP home + hash deeplink ----
+const ART_ORDER=['米津玄師','YOASOBI','嵐','優里'];
+const ART_ACCENT={'米津玄師':'#ff4fa3','YOASOBI':'#39d0ff','嵐':'#ffd166','優里':'#7cffb2'};
+const ART_THUMB_ID={'米津玄師':'lemon','YOASOBI':'yorunikakeru','嵐':'arlovesosweet','優里':'yudry'};
+function artCount(a){return songs.filter(s=>(s.artist||'米津玄師')===a).length}
+function artThumb(a){const pref=ART_THUMB_ID[a];let s=pref&&songs.find(x=>x.id===pref);if(!s)s=songs.find(x=>(x.artist||'米津玄師')===a);return s&&s.videoId?('https://i.ytimg.com/vi/'+s.videoId+'/mqdefault.jpg'):''}
+function showHome(on){const h=$('#home');if(!h)return;h.classList.toggle('show',!!on);if(on){try{drawer(false)}catch(e){}}}
+function goArtist(a,opts){opts=opts||{};if(!ART_ORDER.includes(a)&&!songs.some(s=>(s.artist||'米津玄師')===a))a=ART_ORDER[0];art=a;localStorage.ktvArt=a;showHome(false);renderArts();renderList();scrollListToCur();if(opts.hash!==false){try{history.replaceState(null,'','#artist='+encodeURIComponent(a))}catch(e){location.hash='artist='+encodeURIComponent(a)}}if(opts.openDrawer)drawer(true)}
+function renderHome(){const box=$('#homeCards');if(!box)return;box.innerHTML='';ART_ORDER.forEach(a=>{const n=artCount(a);if(!n)return;const ac=ART_ACCENT[a]||'#ff4fa3';const th=artThumb(a);const b=document.createElement('button');b.type='button';b.className='acard';b.style.setProperty('--ac',ac);b.setAttribute('aria-label',a+'，'+n+' 首歌');b.innerHTML=(th?`<div class="thumb" style="background-image:url('${th}')"></div>`:'')+'<div class="shade"></div><div class="meta"><div class="an"><span class="dot"></span>'+esc(a)+'</div><div class="ac">'+n+' 首歌</div></div>';b.onclick=()=>goArtist(a,{openDrawer:matchMedia('(max-width:768px)').matches});box.append(b)})}
+function parseHash(){const h=(location.hash||'').replace(/^#/,'');if(!h)return null;const q={};h.split('&').forEach(p=>{const i=p.indexOf('=');if(i<0){if(p)q.id=decodeURIComponent(p)}else q[decodeURIComponent(p.slice(0,i))]=decodeURIComponent(p.slice(i+1))});return q}
+function applyHash(){const q=parseHash();if(!q){showHome(true);return false}
+ if(q.song||q.id){const id=q.song||q.id;const s=songs.find(x=>x.id===id);if(s){showHome(false);art=s.artist||'米津玄師';localStorage.ktvArt=art;renderArts();renderList();pick(s);return true}}
+ if(q.artist){goArtist(q.artist,{hash:false});return true}
+ showHome(true);return false}
+window.addEventListener('hashchange',()=>applyHash());
+
+(async()=>{if(!songs.length)songs=await (await fetch('songs.json')).json();renderHome();renderArts();renderList();
+ const skipped=applyHash();if(!skipped){showHome(true)}
+ const bh=$('#brandHome');if(bh)bh.onclick=e=>{e.preventDefault();showHome(true);try{history.replaceState(null,'','#')}catch(x){location.hash=''}};
+ const hb=$('#homeBtn');if(hb)hb.onclick=()=>{showHome(true);drawer(false);try{history.replaceState(null,'','#')}catch(x){location.hash=''}};
+ requestAnimationFrame(tick)})();
+
 </script><script src="https://www.youtube.com/iframe_api"></script>
 </body></html>
