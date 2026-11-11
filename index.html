@@ -161,7 +161,7 @@ aside h1{cursor:pointer}aside h1:hover{filter:brightness(1.15)}
 #pw.fs #scoreRibbon{height:64px}
 #pw.fs #scoreEnd.open{position:absolute;z-index:8}
 @media(max-width:768px){#scoreRibbon{height:64px}#pw.fs #scoreUI.on{width:min(88vw,560px);top:calc(62px + env(safe-area-inset-top))}}
-@media(orientation:landscape) and (max-height:500px){#pw.fs #scoreUI.on{top:calc(50px + env(safe-area-inset-top));width:min(56vw,480px);padding:3px 6px}#pw.fs #scoreRibbon{height:44px}#pw.fs #scoreLive{font-size:12px;margin-top:2px}#pw.fs #scoreLive b{font-size:14px}}
+@media(orientation:landscape) and (max-height:500px){#pw.fs #scoreUI.on{top:calc(50px + env(safe-area-inset-top));width:min(56vw,480px);padding:3px 6px}#pw.fs #scoreRibbon{height:50px}#pw.fs #scoreLive{font-size:12px;margin-top:2px}#pw.fs #scoreLive b{font-size:14px}}
 
 
 #pw.fs #scoreEnd.open{max-height:calc(100% - 16px);width:min(92vw,400px)}
@@ -368,7 +368,7 @@ const TNAME={};TECH.forEach(x=>TNAME[x[0]]=x[1]);
 let P=null,N=[],NS=null,RUNS=[],LONG=[],VIB=[],wantOn=false,recOn=false,stream=null,actx=null,node=null,src=null,an=null,fbTimer=0,FDT=0.021;
 let playing=false,songT=-1,clk={base:0,at:0,raw:NaN,ok:false};
 let acc,tech,yok,frames=[],trail=[],med=[],uPrev=0,uSm=0,uTs=0,uDisp=0,lastVoicedT=-9,run=null,lastNote=null,pend=[],ri=0,li=0,kobAt=-9,vibChkAt=-9;
-let endedShow=0,cdTimer=0,cdLeft=0,dispScore=0,shownTxt='',cvW=0,cvH=0,cvD=0,range={lo:55,hi:72},uiOn=false;
+let endedShow=0,cdTimer=0,cdLeft=0,dispScore=0,shownTxt='',cvW=0,cvH=0,cvD=0,range={lo:55,hi:72},RSPAN=17,RPAN=false,uiOn=false;
 try{wantOn=localStorage[SK]==='1'}catch(e){}
 window._scorePerf={draws:0,frames:0};
 function resetAcc(){acc={ref:0,cov:0,pSum:0,pN:0};tech={vib:0,shak:0,kob:0,fall:0,run:0,long:0};yok={};frames=[];trail=[];med=[];run=null;lastNote=null;pend=[];ri=0;li=0;kobAt=-9;vibChkAt=-9;RUNS.forEach(r=>r.done=0);LONG.forEach(r=>r.done=0);dispScore=0;shownTxt='';liveUpd(true)}
@@ -390,6 +390,7 @@ function showLast(){const e=$('#scoreLast');if(!e||!cur)return;let v=null;try{v=
 function setToggleVisible(on){const lab=$('#scoreLab');if(!lab)return;lab.style.display=on?'inline-flex':'none';if(!on){scoreStop();hideUI();return}const cb=$('#scoreOn');if(cb)cb.checked=wantOn;if(wantOn)scoreStart(false);else hideUI()}
 function scorePrepare(p){clearCd();hideEnd();P=p&&p.notes&&p.notes.length?p:null;N=[];RUNS=[];LONG=[];VIB=[];
  if(P){N=P.notes.map((n,i)=>({m:+n[0],s:+n[1],e:+n[2],w:n[3]===0?.5:1,i}));NS=new Float64Array(N.map(n=>n.s));RUNS=(P.runs||[]).filter(r=>N[r[0]]&&N[r[1]]).map(r=>({a:r[0],b:r[1],s:N[r[0]].s,e:N[r[1]].e,done:0}));VIB=P.vib||[];
+  {const ms=N.filter(n=>n.w===1).map(n=>n.m);const a=(ms.length>20?ms:N.map(n=>n.m)).sort((x,y)=>x-y);const q=f=>a[Math.min(a.length-1,Math.max(0,Math.round(f*(a.length-1))))];let lo=q(.02)-2,hi=q(.98)+2;if(hi-lo<14){const c=(lo+hi)/2;lo=c-7;hi=c+7}RSPAN=Math.min(22,hi-lo);RPAN=hi-lo>22;range.lo=RPAN?(lo+hi)/2-RSPAN/2:lo;range.hi=range.lo+RSPAN}
   let k=0;while(k<N.length){let j=k;while(j+1<N.length&&Math.abs(N[j+1].m-N[k].m)<=.5&&N[j+1].s-N[j].e<=.08)j++;if(N[j].e-N[k].s>=1)LONG.push({m:N[k].m,s:N[k].s,e:N[j].e,done:0});k=j+1}}
  resetAcc();endedShow=0;songT=-1;clk.ok=false;setToggleVisible(!!P)}
 function scoreStop(){recOn=false;window._scoreGumAt=0;uSm=0;uPrev=0;clearInterval(fbTimer);fbTimer=0;try{if(node){node.port&&(node.port.onmessage=null);node.disconnect()}}catch(e){}try{if(src)src.disconnect()}catch(e){}node=src=an=null;if(stream){try{stream.getTracks().forEach(t=>t.stop())}catch(e){}stream=null}if(actx){try{actx.close()}catch(e){}actx=null}}
@@ -448,9 +449,9 @@ let liveAt=0;
 function scoreTick(t,pl){if(!P||!wantOn||document.hidden)return;const st=clockSet(t,pl);playing=pl;if(songT>=0&&(st+1.5<songT||(st<3&&songT>10))){resetAcc();endedShow=0;hideEnd()}songT=st;if(uiOn){draw(st);const now=performance.now();if(now-liveAt>100){liveAt=now;liveUpd(false)}}}
 function draw(t){const c=$('#scoreRibbon');if(!c)return;window._scoreDrawT=t;window._scorePerf.draws++;const dpr=Math.min(2,window.devicePixelRatio||1);const w=cvW||320,h=cvH||72;if(c._w!==w||c._h!==h||c._d!==dpr){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);c._w=w;c._h=h;c._d=dpr}const g=c.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);g.clearRect(0,0,w,h);
  const left=t-2.4,right=t+3.6,span=right-left,xOf=x=>(x-left)/span*w;let k=Math.max(0,lb(left-4));let lo=99,hi=-99;const vis=[];for(;k<N.length&&N[k].s<=right;k++){const n=N[k];if(n.e<left)continue;vis.push(n);if(n.m<lo)lo=n.m;if(n.m>hi)hi=n.m}
- if(vis.length){lo-=3;hi+=3;if(hi-lo<14){const mid=(hi+lo)/2;lo=mid-7;hi=mid+7}range.lo+=(lo-range.lo)*0.06;range.hi+=(hi-range.hi)*0.06}const L0=range.lo,H0=range.hi,yOf=m=>h-6-((m-L0)/((H0-L0)||1))*(h-12);
+ if(RPAN&&vis.length){let d=0;if(hi+1>range.hi)d=hi+1-range.hi;else if(lo-1<range.lo)d=lo-1-range.lo;if(Math.abs(d)>0.01){const st=Math.sign(d)*Math.min(Math.abs(d),0.08);range.lo+=st;range.hi=range.lo+RSPAN}}const L0=range.lo,H0=range.hi,PAD=4,pps=(h-2*PAD)/((H0-L0)||1),BH=Math.max(5,Math.min(8,Math.round(pps*2.1))),yOf=m=>Math.max(2,Math.min(h-2,h-PAD-(m-L0)*pps));
  g.fillStyle='rgba(255,255,255,.12)';for(let m=Math.ceil(L0);m<=H0;m++)if(m%12===0)g.fillRect(0,Math.round(yOf(m)),w,1);
- for(const n of vis){const x=xOf(n.s),xw=Math.max(2,xOf(n.e)-x),y=yOf(n.m);g.fillStyle=n.w<1?'rgba(57,208,255,.28)':'rgba(57,208,255,.62)';g.fillRect(x,y-4,xw,8)}
+ for(const n of vis){const x=xOf(n.s),xw=Math.max(2,xOf(n.e)-x),y=yOf(n.m);g.fillStyle=n.w<1?'rgba(57,208,255,.38)':'rgba(57,208,255,.62)';g.fillRect(x,Math.round(y-BH/2),xw,BH)}
  if(VIB.length){g.strokeStyle='rgba(180,140,255,.9)';g.lineWidth=1.2;for(const v of VIB){if(v[1]<left||v[0]>right)continue;const n=refAt((v[0]+v[1])/2,0.3);if(!n)continue;const y=yOf(n.m)-8;g.beginPath();for(let x=Math.max(0,xOf(v[0]));x<=Math.min(w,xOf(v[1]));x+=2){const yy=y+2*Math.sin(x/2.2);if(x===Math.max(0,xOf(v[0])))g.moveTo(x,yy);else g.lineTo(x,yy)}g.stroke()}}
  const nx=xOf(t);g.fillStyle='#ff4fa3';g.fillRect(Math.round(nx)-1,0,2,h);
  g.strokeStyle='#ffe08a';g.lineWidth=2;g.lineJoin='round';g.beginPath();let pen=0,pt=-9;for(let i=0;i<trail.length;i++){const p=trail[i];if(p.t<left||p.t>t+0.1){pen=0;continue}const x=xOf(p.t),y=yOf(p.m);if(!pen||p.t-pt>0.1)g.moveTo(x,y);else g.lineTo(x,y);pen=1;pt=p.t}g.stroke();
