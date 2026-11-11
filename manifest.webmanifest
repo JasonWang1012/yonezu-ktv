@@ -1,6 +1,6 @@
 {
- "name": "JPOP KTV",
- "short_name": "JPOP",
+ "name": "KTV",
+ "short_name": "KTV",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",

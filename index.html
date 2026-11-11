@@ -1,7 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>JPOP KTV</title>
+<title>KTV</title>
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="JPOP KTV">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="KTV">
 <meta name="theme-color" content="#0b0b14"><link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <style>
@@ -111,7 +111,7 @@ html.fsopen,html.fsopen body{overflow:hidden;overscroll-behavior:none}html.fsope
 #pw.fs #ov .l{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
 #pw.fs #ov .l *{pointer-events:none}
 
-/* JPOP home */
+/* KTV home */
 #home{display:none;position:fixed;inset:0;z-index:60;background:radial-gradient(circle at 30% 0,#2a1440,#0b0b14 55%);overflow:auto;padding:calc(24px + env(safe-area-inset-top)) 20px calc(28px + env(safe-area-inset-bottom));}
 #home.show{display:block}
 #home .wrap{max-width:960px;margin:0 auto}
@@ -176,9 +176,9 @@ aside h1{cursor:pointer}aside h1:hover{filter:brightness(1.15)}
 .l.pre[data-cd]::before{content:attr(data-cd);position:absolute;left:50%;top:-.95em;transform:translateX(-50%);font-size:.4em;letter-spacing:.35em;padding-left:.35em;line-height:1;color:var(--hi);-webkit-text-fill-color:var(--hi);background:none;filter:none;text-shadow:0 0 6px #000,0 1px 2px #000;pointer-events:none;white-space:nowrap}
 #ov .l.pre[data-cd]::before{top:-1.05em}
 </style></head><body>
-<div id="home" aria-label="JPOP 首頁"><div class="wrap"><h1>JPOP</h1><p class="sub">選一位歌手開始 · KTV 歌詞</p><div id="homeCards"></div></div></div>
+<div id="home" aria-label="KTV 首頁"><div class="wrap"><h1>KTV</h1><p class="sub">選一位歌手開始 · KTV 歌詞</p><div id="homeCards"></div></div></div>
 <div id="shade"></div>
-<aside id="side"><div class="sideHd"><h1 id="brandHome" title="回 JPOP 首頁">🎤 JPOP</h1><button id="sideX" class="xb">✕ 關閉</button></div><button type="button" id="homeBtn" title="回首頁">⌂ JPOP 首頁</button><div id="arts"></div><input id="q" placeholder="搜尋歌曲…"><div id="list"></div></aside>
+<aside id="side"><div class="sideHd"><h1 id="brandHome" title="回 KTV 首頁">🎤 KTV</h1><button id="sideX" class="xb">✕ 關閉</button></div><button type="button" id="homeBtn" title="回首頁">⌂ KTV 首頁</button><div id="arts"></div><input id="q" placeholder="搜尋歌曲…"><div id="list"></div></aside>
 <main><div id="pw"><div id="player"></div><div id="ov"></div><div id="ytHit" aria-hidden="false" title="顯示上一首／下一首"></div><div id="ytEdgeL" class="ytEdge" aria-hidden="true"></div><div id="ytEdgeR" class="ytEdge" aria-hidden="true"></div><div id="ytNav" aria-hidden="true"><button type="button" id="prevBtn" class="pvB ytNB" title="上一首 (Shift+P)" aria-label="上一首"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg></button><button type="button" id="nextBtn" class="nxB ytNB" title="下一首 (Shift+N)" aria-label="下一首"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg></button></div><button id="fsx">✕ 離開全螢幕</button><button id="fsRep" class="repBtn">⚑ 回報不準</button><div id="iosHint"><span>想完全隱藏網址列：分享 → 加入主畫面，之後從桌面圖示開啟</span><button id="iosHintX" title="不再顯示">✕</button></div></div>
 <div id="bar"><span id="now">請選擇歌曲</span>
 <button id="menuBtn">☰ 歌單</button><button id="fsBtn" title="全螢幕 KTV 模式">⛶ 全螢幕</button><button id="setBtn">⚙ 設定</button><button id="repBtn" class="repBtn" title="記錄目前歌詞位置不準">⚑ 回報不準</button><button id="rpBtn">回報清單 (<span id="rpN">0</span>)</button>
@@ -345,7 +345,7 @@ $('#rpClr').onclick=()=>{const n=getReps().length;if(!n)return;if(confirm(`確�
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){rpOpen(false);clearTimeout(toastT);$('#toast').classList.remove('show')}});
 updN();
 
-// ---- JPOP home + hash deeplink ----
+// ---- KTV home + hash deeplink ----
 const ART_ORDER=['米津玄師','YOASOBI','嵐','優里','Vaundy','ONE OK ROCK','TRASH'];
 const ART_ACCENT={'米津玄師':'#ff4fa3','YOASOBI':'#39d0ff','嵐':'#ffd166','優里':'#7cffb2','Vaundy':'#ff8a3d','ONE OK ROCK':'#ff3b4a','TRASH':'#d9d9d9'};
 const ART_THUMB_ID={'米津玄師':'lemon','YOASOBI':'yorunikakeru','嵐':'arlovesosweet','優里':'yudry','Vaundy':'vakaiju','ONE OK ROCK':'oorbeginning','TRASH':'trregret'};
