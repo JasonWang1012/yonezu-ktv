@@ -5,6 +5,7 @@
 <meta name="theme-color" content="#0b0b14"><link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <style>
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}@media(pointer:coarse){input:not([type=checkbox]):not([type=file]),select,textarea{font-size:16px!important}}
 :root{--hi:#ff4fa3;--hi2:#39d0ff;--bg:#0b0b14;--vh:100vh}
 html{height:100%;background:#0b0b14}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 20% 0,#2a1440,#0b0b14 60%);color:#eee;font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic","Microsoft JhengHei",sans-serif;height:100vh;height:100dvh;height:var(--vh);display:flex;overflow:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)}
@@ -159,9 +160,16 @@ aside h1{cursor:pointer}aside h1:hover{filter:brightness(1.15)}
 #pw.fs #scoreUI #scoreHint{display:none}
 #pw.fs #scoreRibbon{height:64px}
 #pw.fs #scoreEnd.open{position:absolute;z-index:8}
-@media(max-width:768px){#scoreRibbon{height:64px}#pw.fs #scoreUI.on{width:min(88vw,560px);top:calc(52px + env(safe-area-inset-top))}}
-@media(orientation:landscape) and (max-height:500px){#pw.fs #scoreUI.on{top:calc(40px + env(safe-area-inset-top));width:min(56vw,480px);padding:3px 6px}#pw.fs #scoreRibbon{height:44px}#pw.fs #scoreLive{font-size:12px;margin-top:2px}#pw.fs #scoreLive b{font-size:14px}}
+@media(max-width:768px){#scoreRibbon{height:64px}#pw.fs #scoreUI.on{width:min(88vw,560px);top:calc(62px + env(safe-area-inset-top))}}
+@media(orientation:landscape) and (max-height:500px){#pw.fs #scoreUI.on{top:calc(50px + env(safe-area-inset-top));width:min(56vw,480px);padding:3px 6px}#pw.fs #scoreRibbon{height:44px}#pw.fs #scoreLive{font-size:12px;margin-top:2px}#pw.fs #scoreLive b{font-size:14px}}
 
+
+#pw.fs #scoreEnd.open{max-height:calc(100% - 16px);width:min(92vw,400px)}
+#pw.fs.scoring #iosHint{top:calc(172px + env(safe-area-inset-top))}
+@media(orientation:landscape) and (max-height:500px){#pw.fs.scoring #iosHint{top:calc(130px + env(safe-area-inset-top))}
+#pw.fs #scoreEnd.open{width:min(92vw,640px);padding:8px 12px;gap:3px;font-size:12px}#pw.fs #scoreEndBig{font-size:34px;padding:0}
+#pw.fs #scoreEndNext{order:1;margin:0}#pw.fs #scoreEndTbl{order:2}#pw.fs #scoreEnd .nt{display:none}
+#pw.fs #scoreEndTbl tbody{display:grid;grid-template-columns:1fr 1fr;column-gap:14px}#pw.fs #scoreEndTbl tr{display:flex;justify-content:space-between}#pw.fs #scoreEndTbl td{padding:2px 2px;border-top:1px solid #fff1}#pw.fs #scoreEndTbl tr.sec{grid-column:1/-1}#pw.fs #scoreEndTbl tr.sec td{padding-top:3px}}
 </style></head><body>
 <div id="home" aria-label="JPOP 首頁"><div class="wrap"><h1>JPOP</h1><p class="sub">選一位歌手開始 · KTV 歌詞</p><div id="homeCards"></div></div></div>
 <div id="shade"></div>
@@ -228,7 +236,7 @@ $('#menuBtn').onclick=()=>drawer(!$('#side').classList.contains('open'));$('#sha
 $('#setBtn').onclick=e=>{e.stopPropagation();const p=$('#set'),o=!p.classList.contains('open');p.classList.toggle('open',o);if(o){const b=$('#setBtn'),m=$('main').getBoundingClientRect(),r=b.getBoundingClientRect();p.style.top=(r.bottom-m.top+6)+'px';p.style.left=Math.max(8,Math.min(r.left-m.left-120,m.width-p.offsetWidth-8))+'px'}};
 $('#set').onclick=e=>e.stopPropagation();document.addEventListener('click',()=>$('#set').classList.remove('open'));
 const pw=$('#pw');const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
-function setVH(){const v=window.visualViewport;const h=Math.round(v&&v.height?v.height:window.innerHeight);document.documentElement.style.setProperty('--vh',h+'px');lastIdx=-2}
+function setVH(){const v=window.visualViewport;const h=Math.round(v&&v.height?v.height*(v.scale>1?v.scale:1):window.innerHeight);document.documentElement.style.setProperty('--vh',h+'px');lastIdx=-2}
 setVH();['resize','orientationchange'].forEach(ev=>window.addEventListener(ev,()=>{setVH();setTimeout(setVH,300)}));window.visualViewport&&window.visualViewport.addEventListener('resize',setVH);
 const isStandalone=()=>!!(navigator.standalone||(window.matchMedia&&(matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches)));
 const isIOSSafari=()=>{const u=navigator.userAgent;const ios=/iP(hone|od|ad)/.test(u)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);return ios&&/Safari/.test(u)&&!/CriOS|FxiOS|EdgiOS|OPiOS/.test(u)};
@@ -374,10 +382,10 @@ function yokScore(){let s=0,n=0;for(const k in yok){const a=yok[k];if(a.length<3
 function scoreMsg(t){const m=$('#scoreMsg');if(!m)return;const host=pw.classList.contains('fs')?pw:document.body;if(m.parentNode!==host)host.append(m);m.textContent=t;m.classList.add('show');clearTimeout(m._t);m._t=setTimeout(()=>m.classList.remove('show'),4500)}
 function clearCd(){clearInterval(cdTimer);cdTimer=0;const x=$('#scoreEndNext');x&&x.classList.remove('show')}
 function hideEnd(){clearCd();const e=$('#scoreEnd');e&&e.classList.remove('open')}
-function hideUI(){const u=$('#scoreUI');u&&u.classList.remove('on');uiOn=false;hideEnd()}
+function hideUI(){const u=$('#scoreUI');u&&u.classList.remove('on');uiOn=false;pw.classList.remove('scoring');hideEnd()}
 function placeUI(){const host=pw.classList.contains('fs')?pw:($('main')||document.body);['#scoreUI','#scoreEnd','#scoreMsg'].forEach(q=>{const e=$(q);if(e&&e.parentNode!==host)host.append(e)})}
 function measure(){const c=$('#scoreRibbon');if(!c)return;cvW=c.clientWidth||320;cvH=c.clientHeight||72}
-function showUI(){const u=$('#scoreUI');if(!u)return;u.classList.add('on');uiOn=true;placeUI();measure();showLast()}
+function showUI(){const u=$('#scoreUI');if(!u)return;u.classList.add('on');uiOn=true;pw.classList.add('scoring');placeUI();measure();showLast()}
 function showLast(){const e=$('#scoreLast');if(!e||!cur)return;let v=null;try{v=JSON.parse(localStorage['ktvScoreLast_'+cur.id]||'null')}catch(x){}e.textContent=v&&v.t!=null?'上次 '+Math.round(v.t)+' 分':''}
 function setToggleVisible(on){const lab=$('#scoreLab');if(!lab)return;lab.style.display=on?'inline-flex':'none';if(!on){scoreStop();hideUI();return}const cb=$('#scoreOn');if(cb)cb.checked=wantOn;if(wantOn)scoreStart(false);else hideUI()}
 function scorePrepare(p){clearCd();hideEnd();P=p&&p.notes&&p.notes.length?p:null;N=[];RUNS=[];LONG=[];VIB=[];
@@ -459,7 +467,7 @@ function goNext(){clearCd();hideEnd();try{playNext()}catch(e){}}
 function bind(){const cb=$('#scoreOn');if(cb)cb.onchange=async()=>{wantOn=cb.checked;try{localStorage[SK]=wantOn?'1':'0'}catch(e){}if(wantOn)await scoreStart(true);else{scoreStop();hideUI()}};
  const x=$('#scoreEndX');if(x)x.onclick=e=>{e.stopPropagation();hideEnd()};const go=$('#scoreEndGo');if(go)go.onclick=e=>{e.stopPropagation();goNext()};const st=$('#scoreEndStay');if(st)st.onclick=e=>{e.stopPropagation();clearCd()};const se=$('#scoreEnd');if(se)se.onclick=e=>e.stopPropagation();
  document.addEventListener('keydown',e=>{if(e.key==='Escape')hideEnd()});document.addEventListener('visibilitychange',()=>{if(document.hidden)scoreStop();else if(wantOn&&P)scoreStart(false)});window.addEventListener('pagehide',()=>scoreStop());
- window.addEventListener('resize',()=>setTimeout(measure,50));if(window.ResizeObserver){const c=$('#scoreRibbon');if(c)new ResizeObserver(measure).observe(c)}['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>setTimeout(()=>{placeUI();measure()},60)))}
+ window.addEventListener('resize',()=>setTimeout(measure,50));window.addEventListener('orientationchange',()=>setTimeout(()=>{placeUI();measure()},350));if(window.visualViewport)visualViewport.addEventListener('resize',()=>setTimeout(measure,50));{let lf=null;new MutationObserver(()=>{const f=pw.classList.contains('fs');if(f!==lf){lf=f;placeUI();measure();requestAnimationFrame(measure)}}).observe(pw,{attributes:true,attributeFilter:['class']})}if(window.ResizeObserver){const c=$('#scoreRibbon');if(c)new ResizeObserver(measure).observe(c)}['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>setTimeout(()=>{placeUI();measure()},60)))}
 window._scorePrepare=scorePrepare;window._scoreTick=scoreTick;window._scoreEnded=onSongEnd;window._scorePlace=()=>{placeUI();measure()};
 window._scoreOnHome=function(on){if(on){scoreStop();hideUI()}else if(P)setToggleVisible(true)};
 window._scoreTest=()=>({recOn,wantOn,hasPitch:!!P,notes:N.length,acc:{...acc},tech:{...tech},scores:scores(),stream:!!stream,cd:!!cdTimer,ended:endedShow});
